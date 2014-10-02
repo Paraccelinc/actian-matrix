@@ -134,7 +134,8 @@ resources:
         matrix:
           iso_url: { get_param: iso_url }
           compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
-        run_list: ["matrix"]
+        run_list: ["yum",
+                   "matrix::leader"]
 
 outputs:
   private_key:
