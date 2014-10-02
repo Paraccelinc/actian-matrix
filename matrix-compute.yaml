@@ -1,0 +1,77 @@
+heat_template_version: 2013-05-23
+
+description: |
+  This is a Heat template to deploy a single Matrix Compute node.
+
+parameters:
+
+  # Server settings
+  hostname:
+    type: string
+    default: Matrix-Compute
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  image:
+    type: string
+    default: ""
+
+  flavor:
+    type: string
+    default: ""
+
+  network:
+    type: string
+    default: none
+
+  # SSH Keypair naming
+  ssh_keypair_name:
+    description: "keypair name to register with Nova for the root SSH key"
+    type: string
+
+  ssh_public_key:
+    type: string
+
+  ssh_private_key:
+    type: string
+
+  # parent stack id for metadata
+  parent_stack_id:
+    description: Stack id of the parent stack
+    type: string
+    default: "none"
+
+resources:
+
+  compute_server:
+    type: "Rackspace::Cloud::Server"
+    properties:
+      name: { get_param: hostname }
+      flavor: { get_param: flavor }
+      image: { get_param: image }
+      key_name: { get_param: ssh_keypair_name }
+      metadata:
+        rax-heat: { get_param: parent_stack_id }
+      networks:
+        - uuid: "00000000-0000-0000-0000-000000000000"
+        - uuid: "11111111-1111-1111-1111-111111111111"
+        # - uuid: { get_param: network }
+      user_data: |
+        #!/bin/bash
+        dd if=/dev/zero of=/dev/xvd{e..h} bs=512 count=1 conv=notrunc
+
+
+outputs:
+  accessIPv4:
+    value: { get_attr: [compute_server, accessIPv4] }
+
+  privateIPv4:
+    value: { get_attr: [compute_server, privateIPv4] }
+
+  # matrixIPv4:
+  #  value: { get_attr: [compute_server, networks, { get_param: network }, 0 ] }
