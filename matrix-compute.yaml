@@ -68,6 +68,7 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
+            yum install -y glibc.i686
             for i in xvd{e..h} ; do sfdisk --change-id /dev/$i 1 da ; done
             echo 'root:actian' > /root/pwdfile
             < /root/pwdfile chpasswd
