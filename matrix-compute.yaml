@@ -29,6 +29,10 @@ parameters:
     type: string
     default: none
 
+  root_password:
+    type: string
+    default: none
+
   # SSH Keypair naming
   ssh_keypair_name:
     description: "keypair name to register with Nova for the root SSH key"
@@ -47,7 +51,6 @@ parameters:
     default: "none"
 
 resources:
-
   compute_server:
     type: "Rackspace::Cloud::Server"
     properties:
@@ -61,10 +64,15 @@ resources:
         - uuid: "00000000-0000-0000-0000-000000000000"
         - uuid: "11111111-1111-1111-1111-111111111111"
         # - uuid: { get_param: network }
-      user_data: |
-        #!/bin/bash
-        for i in xvd{e..h} ; do sfdisk --change-id /dev/$i 1 da ; done
-
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash
+            for i in xvd{e..h} ; do sfdisk --change-id /dev/$i 1 da ; done
+            echo 'root:actian' > /root/pwdfile
+            < /root/pwdfile chpasswd
+          params:
+            "%root_password%": { get_param: root_password }
 
 outputs:
   accessIPv4:

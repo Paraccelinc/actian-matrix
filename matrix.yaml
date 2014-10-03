@@ -78,6 +78,12 @@ parameters:
     default: ""
 
 resources:
+  root_password:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 16
+      sequence: lettersdigits
+
   ssh_key:
     type: "OS::Nova::KeyPair"
     properties:
@@ -99,6 +105,7 @@ resources:
         properties:
           image: { get_param: image }
           flavor: { get_param: compute_flavor }
+          root_password: { get_attr: [root_password, value] }
           # network: { get_resource: matrix_network }
           ssh_keypair_name: { get_resource: ssh_key }
           ssh_private_key: { get_attr: [ssh_key, private_key] }
@@ -134,6 +141,7 @@ resources:
         matrix:
           iso_url: { get_param: iso_url }
           compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
+          root_password: { get_attr: [root_password, value] }
         run_list: ["yum",
                    "matrix::leader"]
 
