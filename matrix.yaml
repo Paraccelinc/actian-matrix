@@ -116,7 +116,7 @@ resources:
     type: "Rackspace::Cloud::Server"
     depends_on: compute_servers
     properties:
-      name: matrix-leader
+      name: Matrix-Leader
       flavor: { get_param: leader_flavor }
       image: { get_param: image }
       key_name: { get_resource: ssh_key }
