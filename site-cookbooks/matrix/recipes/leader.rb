@@ -1,8 +1,9 @@
 installer_iso = File.join(Chef::Config[:file_cache_path], 'padb.iso')
 installer_mount = '/mnt'
 
-user node['matrix']['user']
-group node['matrix']['group']
+yum_package 'glibc' do
+  arch 'i686'
+end
 
 node['matrix']['packages'].each do |pkg|
   package pkg
