@@ -63,7 +63,7 @@ resources:
         # - uuid: { get_param: network }
       user_data: |
         #!/bin/bash
-        dd if=/dev/zero of=/dev/xvd{e..h} bs=512 count=1 conv=notrunc
+        for i in xvd{e..h} ; do dd if=/dev/zero of=/dev/$i bs=512 count=1 conv=notrunc ; done
 
 
 outputs:
