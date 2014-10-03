@@ -63,7 +63,7 @@ resources:
         # - uuid: { get_param: network }
       user_data: |
         #!/bin/bash
-        for i in xvd{e..h} ; do dd if=/dev/zero of=/dev/$i bs=512 count=1 conv=notrunc ; done
+        for i in xvd{e..h} ; do sfdisk --change-id /dev/$i 1 da ; done
 
 
 outputs:
