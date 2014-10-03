@@ -14,7 +14,7 @@ remote_file installer_iso do
   not_if { ::File.exist?(installer_iso) }
 end
 
-execute "mount installer" do
+execute 'mount installer' do
   command "mount -o loop #{installer_iso} #{installer_mount}"
   not_if { ::File.exist?(File.join(installer_mount, 'install_padb')) }
 end
