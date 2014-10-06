@@ -77,6 +77,10 @@ parameters:
     type: string
     default: ""
 
+  ip_patch:
+    type: string
+    default: ""
+
 resources:
   root_password:
     type: "OS::Heat::RandomString"
@@ -142,6 +146,7 @@ resources:
           iso_url: { get_param: iso_url }
           compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
           root_password: { get_attr: [root_password, value] }
+          ip_patch: { get_param: ip_patch }
         run_list: ["yum",
                    "matrix::leader"]
 
