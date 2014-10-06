@@ -155,3 +155,6 @@ outputs:
 
   compute_ips:
     value: { get_attr: [compute_servers, accessIPv4] }
+
+  root_password:
+    value: { get_attr: [root_password, value] }
