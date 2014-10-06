@@ -31,7 +31,15 @@ end
 
 # Phase 1 Install
 # 1 - Complete setup
+include_recipe 'python'
+
+python_pip 'pexpct'
+
 # 2 - Unmount iso, delete
+execute "umount #{installer_mount}"
+file 'installer_mount' do
+  action :delete
+end
 
 # Patch files
 include_recipe 'matrix::patch'

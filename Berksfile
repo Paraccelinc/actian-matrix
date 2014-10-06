@@ -3,4 +3,5 @@
 
 source 'https://api.berkshelf.com'
 
+cookbook 'python'
 cookbook 'yum'
