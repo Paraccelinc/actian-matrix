@@ -81,11 +81,7 @@ parameters:
     type: string
     default: ""
 
-  phase_1:
-    type: string
-    default: ""
-
-  phase_2:
+  setup_script:
     type: string
     default: ""
 
@@ -155,9 +151,7 @@ resources:
           compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
           root_password: { get_attr: [root_password, value] }
           ip_patch: { get_param: ip_patch }
-          setup:
-            phase_1: { get_param: phase_1 }
-            phase_2: { get_param: phase_2 }
+          setup_script: { get_param: setup_script }
         run_list: ["yum",
                    "build-essential",
                    "matrix::leader"]

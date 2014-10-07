@@ -33,7 +33,31 @@ end
 # 1 - Complete setup
 include_recipe 'python'
 
-python_pip 'pexpct'
+%w(setuptools pexpect argh).each do |pkg|
+  python_pip pkg do
+    action :upgrade
+  end
+end
+
+setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
+
+remote_file setup_file do
+  owner 'root'
+  group 'root'
+  mode '0700'
+  source node['matrix']['setup_script']
+end
+
+execute 'Perform phase 1 of Matrix install' do
+  command <<-EOH
+    python #{setup_file} phase1 \
+    --installer #{File.join(installer_mount, 'install_padb')} \
+    --leader-ip #{node['matrix']['leader_ip']} \
+    --compute-nodes #{node['matrix']['compute_nodes']} \
+    --root-password #{node['matrix']['root_password']} \
+    --leader-count #{node['matrix']['leader_count']}
+  EOH
+end
 
 # 2 - Unmount iso, delete
 execute "umount #{installer_mount}"
@@ -48,10 +72,9 @@ include_recipe 'matrix::patch'
 # 1 - Apply kernel params (sysctl -p /etc/sysctl.conf)
 execute 'sysctl -p /etc/sysctl.conf'
 
-# 2 - Create RAMdisk (create directory, mount -a, chown)
-directory node['matrix']['ramdisk']
-
+# 2 - Create RAMdisk
 execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
 
 # 3 - start daemontools
+execute 'nohup /bin/sh /command/svscanboot &'
 # 4 - Run phase 2 setup as paraccel user
