@@ -155,7 +155,7 @@ resources:
       node:
         matrix:
           iso_url: { get_param: iso_url }
-          compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
+          compute_nodes: { get_attr: [ compute_servers, accessIPv4 ] }
           root_password: { get_attr: [root_password, value] }
           paraccel_password: { get_attr: [paraccel_password, value] }
           ip_patch: { get_param: ip_patch }
