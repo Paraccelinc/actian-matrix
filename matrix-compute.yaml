@@ -69,10 +69,12 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
-            yum install -y glibc.i686 nc expect ntp libpcap-devel
+            yum install -y glibc.i686 nc expect ntp libpcap-devel gdb
             for i in xvd{e..h} ; do sfdisk --change-id /dev/$i 1 da ; done
             echo 'root:%root_password%' > /root/pwdfile
             < /root/pwdfile chpasswd
+            iptables -F
+            /etc/init.d/iptables save
           params:
             "%root_password%": { get_param: root_password }
 
