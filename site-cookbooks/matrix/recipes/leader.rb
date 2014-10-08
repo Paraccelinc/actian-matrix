@@ -61,7 +61,7 @@ unless File.exist?(phase1)
   end
   # 2 - Unmount iso, delete
   execute "umount #{installer_mount}"
-  file 'installer_mount' do
+  file installer_iso do
     action :delete
   end
   execute "touch #{phase1}"
@@ -84,12 +84,16 @@ unless File.exist?(phase2)
     action :start
   end
 
+  # Wait for reboot of compute nodes to complete before running setup
+  sleep(node['matrix']['sleep'])
+
+  # 4 - Run phase 2 setup as paraccel user
   execute 'Perform phase 2 of Matrix install' do
     command <<-EOH
       python #{setup_file} phase2 \
       --password #{node['matrix']['paraccel_password']}
     EOH
   end
-  # 4 - Run phase 2 setup as paraccel user
+
   execute "touch #{phase2}"
 end
