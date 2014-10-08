@@ -5,7 +5,7 @@ default['matrix']['packages'] = %w(nc expect ntp libpcap-devel)
 default['matrix']['root_password'] = nil
 default['matrix']['paraccel_password'] = nil
 default['matrix']['ramdisk'] = '/mnt/ramdisk'
-default['matrix']['sleep'] = 75
+default['matrix']['sleep'] = 90
 
 default['matrix']['leader_ip'] = node['ipaddress']
 default['matrix']['leader_count'] = 1

@@ -84,14 +84,12 @@ unless File.exist?(phase2)
     action :start
   end
 
-  # Wait for reboot of compute nodes to complete before running setup
-  sleep(node['matrix']['sleep'])
-
   # 4 - Run phase 2 setup as paraccel user
   execute 'Perform phase 2 of Matrix install' do
     command <<-EOH
       python #{setup_file} phase2 \
       --password #{node['matrix']['paraccel_password']}
+      --start-delay #{node['matrix']['sleep']}
     EOH
   end
 
