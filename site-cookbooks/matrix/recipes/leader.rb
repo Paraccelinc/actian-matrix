@@ -68,7 +68,7 @@ unless File.exist?(phase1)
   execute "touch #{phase1}"
 end
 
-if File.exist?(phase2)
+unless File.exist?(phase2)
   # Patch files
   include_recipe 'matrix::patch'
 
