@@ -88,7 +88,7 @@ unless File.exist?(phase2)
   execute 'Perform phase 2 of Matrix install' do
     command <<-EOH
       python #{setup_file} phase2 \
-      --password #{node['matrix']['paraccel_password']}
+      --password #{node['matrix']['paraccel_password']} \
       --start-delay #{node['matrix']['sleep']}
     EOH
   end
