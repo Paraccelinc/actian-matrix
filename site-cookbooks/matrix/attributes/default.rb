@@ -3,6 +3,7 @@ default['matrix']['installer_mount'] = '/mnt/matrix'
 default['matrix']['compute_nodes'] = %w()  # List of Compute IPs
 default['matrix']['packages'] = %w(nc expect)  # Additional Packages to install
 default['matrix']['root_password'] = nil
+default['matrix']['paraccel_password'] = nil
 default['matrix']['ramdisk'] = '/mnt/ramdisk'
 
 default['matrix']['leader_ip'] = node['ipaddress']
