@@ -50,6 +50,13 @@ unless File.exist?(phase1)
     source node['matrix']['setup_script']
   end
 
+  puts "python #{setup_file} phase1 \
+  --installer #{File.join(installer_mount, 'install_padb')} \
+  --leader-ip #{node['matrix']['leader_ip']} \
+  --compute-nodes #{node['matrix']['compute_nodes'].join(',')} \
+  --root-password #{node['matrix']['root_password']} \
+  --leader-count #{node['matrix']['leader_count']}"
+
   execute 'Perform phase 1 of Matrix install' do
     command <<-EOH
       python #{setup_file} phase1 \
@@ -80,10 +87,10 @@ unless File.exist?(phase2)
   execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
 
   # 3 - start daemontools
-  service 'padb-daemontools' do
-    provider Chef::Provider::Service::Upstart
-    action :start
-  end
+  #service 'padb-daemontools' do
+  #  provider Chef::Provider::Service::Upstart
+  #  action :start
+  #end
   # 4 - Run phase 2 setup as paraccel user
   execute "touch #{phase2}"
 end
