@@ -152,8 +152,13 @@ resources:
           root_password: { get_attr: [root_password, value] }
           ip_patch: { get_param: ip_patch }
           setup_script: { get_param: setup_script }
+        rax:
+          firewall:
+            tcp: [4540, 8873]
+            udp: [4541, 4542]
         run_list: ["yum",
                    "build-essential",
+                   "rax-firewall",
                    "matrix::leader"]
 
 outputs:
