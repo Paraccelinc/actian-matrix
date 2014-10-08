@@ -27,57 +27,58 @@ unless File.exist?('/home/paraccel/scripts/stage_two_install.py')
     command "mount -o loop #{installer_iso} #{installer_mount}"
     not_if { ::File.exist?(File.join(installer_mount, 'install_padb')) }
   end
-end
 
-# Phase 1 Install
-# 1 - Complete setup
-include_recipe 'python'
+  # Phase 1 Install
+  # 1 - Complete setup
+  include_recipe 'python'
 
-%w(setuptools pexpect argh).each do |pkg|
-  python_pip pkg do
-    action :upgrade
+  %w(setuptools pexpect argh).each do |pkg|
+    python_pip pkg do
+      action :upgrade
+    end
+  end
+
+  setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
+
+  remote_file setup_file do
+    owner 'root'
+    group 'root'
+    mode '0700'
+    source node['matrix']['setup_script']
+  end
+
+  execute 'Perform phase 1 of Matrix install' do
+    command <<-EOH
+      python #{setup_file} phase1 \
+      --installer #{File.join(installer_mount, 'install_padb')} \
+      --leader-ip #{node['matrix']['leader_ip']} \
+      --compute-nodes #{node['matrix']['compute_nodes'].join(',')} \
+      --root-password #{node['matrix']['root_password']} \
+      --leader-count #{node['matrix']['leader_count']}
+    EOH
+  end
+  # 2 - Unmount iso, delete
+  execute "umount #{installer_mount}"
+  file 'installer_mount' do
+    action :delete
   end
 end
 
-setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
+if File.exist?('/home/paraccel/scripts/stage_two_install.py')
+  # Patch files
+  include_recipe 'matrix::patch'
 
-remote_file setup_file do
-  owner 'root'
-  group 'root'
-  mode '0700'
-  source node['matrix']['setup_script']
+  # Phase 2 Install
+  # 1 - Apply kernel params (sysctl -p /etc/sysctl.conf)
+  execute 'sysctl -p /etc/sysctl.conf || true'
+
+  # 2 - Create RAMdisk
+  execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
+
+  # 3 - start daemontools
+  service 'padb-daemontools' do
+    provider Chef::Provider::Service::Upstart
+    action :start
+  end
+  # 4 - Run phase 2 setup as paraccel user
 end
-
-execute 'Perform phase 1 of Matrix install' do
-  command <<-EOH
-    python #{setup_file} phase1 \
-    --installer #{File.join(installer_mount, 'install_padb')} \
-    --leader-ip #{node['matrix']['leader_ip']} \
-    --compute-nodes #{node['matrix']['compute_nodes'].join(',')} \
-    --root-password #{node['matrix']['root_password']} \
-    --leader-count #{node['matrix']['leader_count']}
-  EOH
-end
-
-# 2 - Unmount iso, delete
-execute "umount #{installer_mount}"
-file 'installer_mount' do
-  action :delete
-end
-
-# Patch files
-include_recipe 'matrix::patch'
-
-# Phase 2 Install
-# 1 - Apply kernel params (sysctl -p /etc/sysctl.conf)
-execute 'sysctl -p /etc/sysctl.conf || true'
-
-# 2 - Create RAMdisk
-execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
-
-# 3 - start daemontools
-service 'padb-daemontools' do
-  provider Chef::Provider::Service::Upstart
-  action :start
-end
-# 4 - Run phase 2 setup as paraccel user
