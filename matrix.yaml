@@ -92,6 +92,12 @@ resources:
       length: 16
       sequence: lettersdigits
 
+  paraccel_password:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 16
+      sequence: lettersdigits
+
   ssh_key:
     type: "OS::Nova::KeyPair"
     properties:
@@ -150,6 +156,7 @@ resources:
           iso_url: { get_param: iso_url }
           compute_nodes: { get_attr: [ compute_servers, privateIPv4 ] }
           root_password: { get_attr: [root_password, value] }
+          paraccel_password: { get_attr: [paraccel_password, value] }
           ip_patch: { get_param: ip_patch }
           setup_script: { get_param: setup_script }
         rax:
@@ -174,3 +181,6 @@ outputs:
 
   root_password:
     value: { get_attr: [root_password, value] }
+
+  paraccel_password:
+    value: { get_attr: [paraccel_password, value] }
