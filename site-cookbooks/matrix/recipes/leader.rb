@@ -2,6 +2,9 @@ installer_iso = File.join(Chef::Config[:file_cache_path], 'padb.iso')
 installer_mount = node['matrix']['installer_mount']
 setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
 
+paraccel_user = 'paraccel'
+paraccel_group = paraccel_user
+
 phase1 = '/root/.p1'
 phase2 = '/root/.p2'
 
@@ -84,7 +87,16 @@ unless File.exist?(phase2)
     action :start
   end
 
-  # 4 - Run phase 2 setup as paraccel user
+  # 4 - Overwrite /home/paraccel/.bash_profile, default loads stage2 installer,
+  # which breaks the python setup script
+  template '/home/paraccel/.bash_profile' do
+    source 'bash_profile'
+    user paraccel_user
+    group paraccel_group
+    mode 0644
+  end
+
+  # 5 - Run phase 2 setup as paraccel user
   execute 'Perform phase 2 of Matrix install' do
     command <<-EOH
       python #{setup_file} phase2 \
