@@ -35,7 +35,6 @@
       end
     when 'rhel', 'centos', 'debian'
       iptables_ng_rule "Firewall rule, #{proto}/#{listen_port}" do
-        name       'Allow'
         chain      'INPUT'
         table      'filter'
         ip_version [4, 6]
