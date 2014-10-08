@@ -76,5 +76,8 @@ execute 'sysctl -p /etc/sysctl.conf'
 execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
 
 # 3 - start daemontools
-execute 'nohup /bin/sh /command/svscanboot &'
+service 'padb-daemontools' do
+  provider Chef::Provider::Service::Upstart
+  action :start
+end
 # 4 - Run phase 2 setup as paraccel user
