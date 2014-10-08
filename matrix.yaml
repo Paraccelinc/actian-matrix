@@ -136,6 +136,7 @@ resources:
       key_name: { get_resource: ssh_key }
       metadata:
         rax-heat: { get_param: "OS::stack_id" }
+        build_config: core
       networks:
       - uuid: "00000000-0000-0000-0000-000000000000"
       - uuid: "11111111-1111-1111-1111-111111111111"
