@@ -1,7 +1,7 @@
 installer_iso = File.join(Chef::Config[:file_cache_path], 'padb.iso')
 installer_mount = node['matrix']['installer_mount']
 
-unless File.exist?('/home/paraccel/install_padb')
+unless File.exist?('/home/paraccel/scripts/stage_two_install.py')
   directory installer_mount do
     owner 'root'
     group 'root'
@@ -70,7 +70,7 @@ include_recipe 'matrix::patch'
 
 # Phase 2 Install
 # 1 - Apply kernel params (sysctl -p /etc/sysctl.conf)
-execute 'sysctl -p /etc/sysctl.conf'
+execute 'sysctl -p /etc/sysctl.conf || true'
 
 # 2 - Create RAMdisk
 execute 'mount -a ; chown -R paraccel:paraccel /mnt/ramdisk'
