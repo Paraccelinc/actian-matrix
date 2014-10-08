@@ -166,7 +166,6 @@ resources:
             udp: [4541, 4542]
         run_list: ["yum",
                    "build-essential",
-                   "rax-firewall",
                    "matrix::leader"]
 
 outputs:
