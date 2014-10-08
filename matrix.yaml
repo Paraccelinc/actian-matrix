@@ -128,7 +128,6 @@ resources:
 
   leader_server:
     type: "Rackspace::Cloud::Server"
-    depends_on: compute_servers
     properties:
       name: Matrix-Leader
       flavor: { get_param: leader_flavor }
@@ -146,6 +145,7 @@ resources:
     type: "OS::Heat::ChefSolo"
     depends_on:
     - leader_server
+    - compute_servers
     properties:
       username: root
       private_key: { get_attr: [ssh_key, private_key] }
