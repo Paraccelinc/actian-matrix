@@ -53,7 +53,7 @@ execute 'Perform phase 1 of Matrix install' do
     python #{setup_file} phase1 \
     --installer #{File.join(installer_mount, 'install_padb')} \
     --leader-ip #{node['matrix']['leader_ip']} \
-    --compute-nodes #{node['matrix']['compute_nodes']} \
+    --compute-nodes #{node['matrix']['compute_nodes'].join(',')} \
     --root-password #{node['matrix']['root_password']} \
     --leader-count #{node['matrix']['leader_count']}
   EOH
