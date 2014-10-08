@@ -1,5 +1,6 @@
 installer_iso = File.join(Chef::Config[:file_cache_path], 'padb.iso')
 installer_mount = node['matrix']['installer_mount']
+setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
 
 phase1 = '/root/.p1'
 phase2 = '/root/.p2'
@@ -40,8 +41,6 @@ unless File.exist?(phase1)
       action :upgrade
     end
   end
-
-  setup_file = File.join(Chef::Config[:file_cache_path], 'setup.py')
 
   remote_file setup_file do
     owner 'root'
