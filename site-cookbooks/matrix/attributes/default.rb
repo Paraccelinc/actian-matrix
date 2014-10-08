@@ -1,7 +1,7 @@
 default['matrix']['iso_url'] = nil
 default['matrix']['installer_mount'] = '/mnt/matrix'
 default['matrix']['compute_nodes'] = %w()  # List of Compute IPs
-default['matrix']['packages'] = %w(nc expect ntp libpcap-devel)
+default['matrix']['packages'] = %w(nc expect ntp libpcap-devel gdb)
 default['matrix']['root_password'] = nil
 default['matrix']['paraccel_password'] = nil
 default['matrix']['ramdisk'] = '/mnt/ramdisk'
