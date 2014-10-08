@@ -1,7 +1,10 @@
 installer_iso = File.join(Chef::Config[:file_cache_path], 'padb.iso')
 installer_mount = node['matrix']['installer_mount']
 
-unless File.exist?('/home/paraccel/scripts/stage_two_install.py')
+phase1 = '/root/.p1'
+phase2 = '/root/.p2'
+
+unless File.exist?(phase1)
   directory installer_mount do
     owner 'root'
     group 'root'
@@ -62,9 +65,10 @@ unless File.exist?('/home/paraccel/scripts/stage_two_install.py')
   file 'installer_mount' do
     action :delete
   end
+  execute "touch #{phase1}"
 end
 
-if File.exist?('/home/paraccel/scripts/stage_two_install.py')
+if File.exist?(phase2)
   # Patch files
   include_recipe 'matrix::patch'
 
@@ -81,4 +85,5 @@ if File.exist?('/home/paraccel/scripts/stage_two_install.py')
     action :start
   end
   # 4 - Run phase 2 setup as paraccel user
+  execute "touch #{phase2}"
 end
