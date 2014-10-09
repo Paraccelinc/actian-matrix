@@ -1,4 +1,5 @@
 import pexpect
+import re
 import sys
 import time
 
@@ -22,6 +23,14 @@ def number_of_nodes(leader_count, compute_nodes):
         return leader_count + len(compute_nodes)
     elif isinstance(compute_nodes, int):
         return leader_count + compute_nodes
+
+
+def use_ip(string, ip):
+    """Function to determine if a string includes a given IP"""
+    if re.search(" %s " % ip, string):
+        return "yes"
+    else:
+        return "no"
 
 
 @alias('phase1')
@@ -62,15 +71,22 @@ def phase1_install(args):
         child.sendline("%s" % standby_count)
 
         child.expect("Use IP.* for PADB cluster")
-        child.sendline(yes)
+        child.sendline(use_ip(child.after, leader_ip))
     elif i == 1:
-        child.sendline(yes)
+        child.sendline(use_ip(child.after, leader_ip))
 
     child.expect("Use IP.* for PADB cluster")
-    child.sendline(no)
+    child.sendline(use_ip(child.after, leader_ip))
 
-    child.expect("Are cluster node IPs sequential")
-    child.sendline(no)
+    i = child.expect(["Use IP.* for PADB cluster",
+                      "Are cluster node IPs sequential"])
+    if i == 0:
+        child.sendline(use_ip(child.after, leader_ip))
+
+        child.expect("Are cluster node IPs sequential")
+        child.sendline(no)
+    elif i == 1:
+        child.sendline(no)
 
     child.expect("Enter cluster flexible IP specification")
     child.sendline(array_to_flex_ip(leader_ip, compute_nodes))
