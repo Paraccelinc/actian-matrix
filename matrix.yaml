@@ -60,7 +60,7 @@ parameters:
     constraints:
     - range:
         min: 1
-        max: 7
+        max: 16
       description: Must be between 0 and 7 servers.
 
   network_range:
