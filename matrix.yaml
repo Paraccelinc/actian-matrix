@@ -87,7 +87,7 @@ parameters:
 
   setup_script:
     type: string
-    default: ""
+    default: "https://raw.githubusercontent.com/brint/actian-matrix/master/scripts/config.py"
 
 resources:
   root_password:
