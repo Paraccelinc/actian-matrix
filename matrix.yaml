@@ -21,6 +21,11 @@ parameters:
     constraints:
     - allowed_values:
       - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 60 GB Performance
+      - 90 GB Performance
+      - 120 GB Performance
       description: |
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
@@ -38,8 +43,12 @@ parameters:
     default: 60 GB Performance
     constraints:
     - allowed_values:
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
       - 60 GB Performance
       - 90 GB Performance
+      - 120 GB Performance
       description: |
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
@@ -174,7 +183,8 @@ resources:
       node:
         matrix:
           iso_url: { get_param: iso_url }
-          compute_nodes: { get_attr: [ compute_servers, accessIPv4 ] }
+          leader_ip: { get_attr: [leader_server, privateIPv4] }
+          compute_nodes: { get_attr: [compute_servers, privateIPv4] }
           root_password: { get_attr: [root_password, value] }
           paraccel_password: { get_attr: [paraccel_password, value] }
           ip_patch: { get_param: ip_patch }
