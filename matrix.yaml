@@ -1,6 +1,6 @@
 heat_template_version: 2013-05-23
 
-description: "Test template for Matrix training"
+description: "Matrix HEAT template for onMetal"
 
 parameters:
   image:
@@ -17,15 +17,13 @@ parameters:
       Required: Rackspace Cloud Server flavor to use. The size is based on the
       amount of RAM for the provisioned server.
     type: string
-    default: 8 GB Performance
+    default: 15 GB Performance
     constraints:
     - allowed_values:
-      - 8 GB Performance
       - 15 GB Performance
       - 30 GB Performance
       - 60 GB Performance
       - 90 GB Performance
-      - 120 GB Performance
       description: |
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
@@ -43,7 +41,6 @@ parameters:
     default: 60 GB Performance
     constraints:
     - allowed_values:
-      - 8 GB Performance
       - 15 GB Performance
       - 30 GB Performance
       - 60 GB Performance
@@ -61,7 +58,7 @@ parameters:
     - range:
         min: 1
         max: 16
-      description: Must be between 0 and 7 servers.
+      description: Must be between 1 and 16 servers.
 
   network_range:
     label: Private Network CIDR
