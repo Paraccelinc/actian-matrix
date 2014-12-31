@@ -23,7 +23,6 @@ parameters:
       - 15 GB Performance
       - 30 GB Performance
       - 60 GB Performance
-      - 90 GB Performance
       description: |
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
